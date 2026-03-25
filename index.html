@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desenho Curricular IA - SENAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #0B0E14; 
+            --panel-bg: rgba(16, 22, 34, 0.7); 
+            --text-main: #E2E8F0;
+            --text-muted: #94A3B8;
+            --accent-blue: #00E5FF; 
+            --accent-red: #FF2A2A; 
+            --grid-color: rgba(0, 229, 255, 0.03);
+            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            margin: 0;
+            padding: 0;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* TELA DE INTRODUÇÃO */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-color);
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .intro-content {
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 12px;
+            padding: 4rem;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 229, 255, 0.1);
+            max-width: 700px;
+            border-top: 4px solid var(--accent-blue);
+        }
+
+        .intro-logo {
+            max-width: 220px;
+            margin-bottom: 2rem;
+        }
+
+        .intro-title {
+            font-family: var(--font-mono);
+            font-size: 3rem;
+            color: var(--accent-blue);
+            margin: 0 0 1rem 0;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+            letter-spacing: -1px;
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .highlight-red {
+            color: var(--accent-red);
+            font-family: var(--font-mono);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start {
+            background: rgba(0, 229, 255, 0.1);
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            padding: 1rem 2.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start:hover {
+            background: var(--accent-blue);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .hidden-screen {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* CONTEÚDO PRINCIPAL (Inicialmente oculto para o flexbox não quebrar) */
+        #main-app {
+            display: none; 
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        #main-app.visible {
+            opacity: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+            background: linear-gradient(180deg, rgba(0,66,130,0.15) 0%, rgba(11,14,20,1) 100%);
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-family: var(--font-mono);
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        }
+
+        .cursor { animation: blink 1s step-start infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .senai-logo-header {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .workspace {
+            display: flex;
+            flex: 1;
+            padding: 2rem;
+            gap: 2rem;
+            overflow: hidden; 
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .panel-title {
+            font-family: var(--font-mono);
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-bottom: 1px dashed rgba(0, 229, 255, 0.3);
+            padding-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .panel-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0, 229, 255, 0.3);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .panel-header-actions .panel-title {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mini-btn {
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .mini-btn:hover {
+            background: rgba(0, 229, 255, 0.1);
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.2);
+        }
+
+        .mini-btn.btn-danger {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .mini-btn.btn-danger:hover {
+            background: rgba(255, 42, 42, 0.1);
+            box-shadow: 0 0 8px rgba(255, 42, 42, 0.2);
+        }
+
+        .library-panel { width: 340px; }
+        .grid-panel { flex: 1; border: 1px solid rgba(0, 229, 255, 0.2); }
+        .editor-panel { width: 300px; }
+
+        .dropzone {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto; 
+            padding-bottom: 2rem;
+        }
+
+        .dropzone.drag-over {
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px dashed rgba(0, 229, 255, 0.3);
+        }
+
+        .trash-zone {
+            height: 150px;
+            border: 2px dashed var(--accent-red);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-red);
+            font-family: var(--font-mono);
+            opacity: 0.6;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .trash-zone.drag-over {
+            opacity: 1;
+            background: rgba(255, 42, 42, 0.1);
+            transform: scale(1.02);
+        }
+
+        /* Lego Blocks */
+        .lego-block {
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid var(--accent-blue);
+            border-top: 4px solid var(--accent-blue);
+            border-radius: 4px 4px 8px 8px;
+            padding: 1rem;
+            cursor: grab;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
+            position: relative;
+            user-select: none;
+            background-color: var(--bg-color); 
+        }
+
+        .lego-block::before {
+            content: '';
+            position: absolute;
+            top: -8px; left: 20px; right: 20px; height: 4px;
+            background-image: radial-gradient(circle at 10px 2px, var(--accent-blue) 4px, transparent 4px);
+            background-size: 30px 4px; background-repeat: repeat-x;
+        }
+
+        .lego-block:hover { box-shadow: 0 0 15px rgba(0, 229, 255, 0.15); }
+
+        .lego-block.dragging {
+            opacity: 0.2; 
+        }
+
+        .lego-block.glow-bottom {
+            box-shadow: 0 12px 20px -5px rgba(255, 255, 255, 0.8);
+            border-bottom: 3px solid #FFF;
+        }
+
+        .lego-block.glow-top {
+            box-shadow: 0 -12px 20px -5px rgba(255, 255, 255, 0.8);
+            border-top: 3px solid #FFF;
+        }
+
+        .block-info { display: flex; flex-direction: column; padding-right: 15px; pointer-events: none; }
+        
+        .block-title {
+            font-family: var(--font-mono); font-size: 0.90rem;
+            font-weight: bold; color: white; line-height: 1.3;
+        }
+
+        .block-hours { font-size: 0.8rem; color: var(--accent-blue); margin-top: 6px; font-family: var(--font-mono); }
+
+        .info-btn {
+            background: transparent; border: none; color: var(--text-muted);
+            cursor: help; transition: color 0.3s; font-size: 1.2rem; padding: 5px;
+        }
+        .info-btn:hover { color: var(--accent-blue); }
+
+        /* Tooltip Global */
+        #global-tooltip {
+            position: fixed;
+            background-color: rgba(11, 14, 20, 0.95);
+            color: var(--text-main);
+            border: 1px solid var(--accent-blue);
+            border-radius: 6px;
+            padding: 12px;
+            width: 280px;
+            z-index: 9999;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        #global-tooltip.visible { opacity: 1; visibility: visible; }
+
+        /* Buttons principais */
+        .btn {
+            background: transparent; border: 1px solid; padding: 1rem;
+            font-family: var(--font-mono); border-radius: 4px; cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; font-size: 0.9rem; width: 100%;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn-add { border-color: var(--accent-blue); color: var(--accent-blue); margin-bottom: 10px; }
+        .btn-add:hover { background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
+
+        .btn-pdf { border-color: #E2E8F0; color: #E2E8F0; }
+        .btn-pdf:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+
+        .btn-undo {
+            background: transparent; border: none; color: var(--accent-blue);
+            font-family: var(--font-mono); font-size: 0.85rem; cursor: pointer;
+            text-decoration: underline; width: 100%; text-align: center;
+            transition: color 0.3s; padding: 5px;
+        }
+        .btn-undo:hover { color: #fff; }
+        .hidden { display: none !important; }
+
+        footer {
+            background: rgba(11, 14, 20, 0.95);
+            border-top: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 1.2rem;
+            text-align: center; flex-shrink: 0;
+        }
+
+        .counter-container {
+            font-family: var(--font-mono); font-size: 1.2rem; color: white;
+            display: flex; align-items: center; justify-content: center; gap: 1rem;
+        }
+
+        .total-hours-display {
+            color: var(--accent-blue); font-size: 2.2rem; font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4); background: rgba(0, 229, 255, 0.05);
+            padding: 0.2rem 1rem; border-radius: 8px; border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 255, 0.5); }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <div class="intro-content">
+            <img src="logo.png" alt="Logo SENAI" class="intro-logo">
+            <h1 class="intro-title">BEM-VINDO<span class="cursor">_</span></h1>
+            <p class="intro-text">
+                Aos <span class="highlight-red">portadores do futuro</span>:<br><br>
+                Nesta plataforma colaborativa, vamos trabalhar juntos, <br>
+                <span style="color: var(--accent-blue); font-weight: bold;">moldando o amanhã com IA</span>. <br><br>
+                Nossa missão é desenhar a grade curricular que impulsionará os próximos passos da instituição.
+            </p>
+            <button class="btn-start" onclick="startApp()">Iniciar Plataforma <i class="fas fa-arrow-right" style="margin-left: 10px;"></i></button>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <header>
+            <h1>DESENHO_CURRICULAR_INTELIGÊNCIA_ARTIFICIAL<span class="cursor">_</span></h1>
+            <img src="logo.png" alt="Logo SENAI" class="senai-logo-header">
+        </header>
+
+        <main class="workspace">
+            <aside class="panel library-panel">
+                <h2 class="panel-title">BIBLIOTECA_DE_UNIDADES</h2>
+                <div class="dropzone" id="library-zone"></div>
+            </aside>
+
+            <section class="panel grid-panel">
+                <div class="panel-header-actions">
+                    <h2 class="panel-title">GRADE_CURRICULAR</h2>
+                    <div class="action-buttons">
+                        <button class="mini-btn" onclick="returnAllToLibrary()" title="Devolver todas à biblioteca"><i class="fas fa-undo"></i> Devolver Todas</button>
+                        <button class="mini-btn btn-danger" onclick="clearGrid()" title="Excluir todas da grade"><i class="fas fa-trash-alt"></i> Excluir Tudo</button>
+                    </div>
+                </div>
+                <div class="dropzone" id="curriculum-zone"></div>
+            </section>
+
+            <aside class="panel editor-panel" style="justify-content: space-between;">
+                <div>
+                    <h2 class="panel-title">EDITOR_DE_GRADE</h2>
+                    <button class="btn btn-add" onclick="createNewUnit()">
+                        <i class="fas fa-plus"></i> Nova Unidade
+                    </button>
+                    <button class="btn btn-pdf" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 0.5rem;">Arraste para cá para remover</p>
+                    <div class="trash-zone" id="trash-zone">
+                        <i class="fas fa-trash-alt fa-2x"></i>
+                    </div>
+                    <button id="undo-btn" class="btn-undo hidden" onclick="undoDelete()">
+                        ⟲ Desfazer exclusão
+                    </button>
+                </div>
+            </aside>
+        </main>
+
+        <footer>
+            <div class="counter-container">
+                <span>CARGA HORÁRIA TOTAL DO CURSO:</span>
+                <span class="total-hours-display" id="total-hours">0H</span>
+            </div>
+        </footer>
+    </div>
+
+    <div id="global-tooltip"></div>
+
+    <script>
+        // --- TRANSIÇÃO DE TELA ---
+        function startApp() {
+            const intro = document.getElementById('intro-screen');
+            const app = document.getElementById('main-app');
+            
+            // Inicia o fade out da intro
+            intro.classList.add('hidden-screen');
+            
+            // Após a transição do fade out (600ms), esconde o elemento e mostra a aplicação
+            setTimeout(() => {
+                intro.style.display = 'none';
+                app.style.display = 'flex';
+                
+                // Pequeno delay para o navegador renderizar antes de aplicar a opacidade
+                setTimeout(() => {
+                    app.classList.add('visible');
+                }, 50);
+            }, 600);
+        }
+
+        // --- DADOS E LÓGICA DA APLICAÇÃO ---
+        const initialUnits = [
+            { id: 'u1', name: 'Fundamentos da Inteligência Artificial', hours: 16, desc: 'Compreender os conceitos centrais da IA, suas áreas, aplicações, limitações e impacto no mundo do trabalho.' },
+            { id: 'u2', name: 'Letramento em Dados e Estrutura da Informação', hours: 16, desc: 'Interpretar dados e estruturas de informação usadas em aplicações de IA.' },
+            { id: 'u3', name: 'Engenharia de Prompt e Interação com Modelos', hours: 20, desc: 'Elaborar instruções mais eficazes para diferentes tipos de modelos e contextos de uso.' },
+            { id: 'u4', name: 'Ferramentas de IA para Produtividade e Automação', hours: 20, desc: 'Aplicar IA em tarefas de pesquisa, produção de conteúdo, organização e automação de rotinas.' },
+            { id: 'u5', name: 'Ambientes de IA e Infraestrutura Básica', hours: 24, desc: 'Preparar e configurar ambientes para uso de ferramentas de IA local e em nuvem.' },
+            { id: 'u6', name: 'Instalação e Uso de LLMs Offline', hours: 24, desc: 'Instalar, configurar e utilizar modelos de linguagem localmente, compreendendo limites técnicos e operacionais.' },
+            { id: 'u7', name: 'Personalização de Ambientes de IA', hours: 20, desc: 'Configurar ambientes e fluxos personalizados de trabalho com IA para diferentes finalidades.' },
+            { id: 'u8', name: 'Manipulação de Arquivos e Estruturas para IA', hours: 20, desc: 'Criar, editar, importar e exportar estruturas de dados usadas em aplicações de IA.' },
+            { id: 'u9', name: 'Introdução a Programação para IA', hours: 24, desc: 'Desenvolver pequenas rotinas para apoiar tarefas relacionadas à IA e ao tratamento de dados.' },
+            { id: 'u10', name: 'Machine Learning', hours: 32, desc: 'Compreender e aplicar conceitos introdutórios de aprendizado de máquina em problemas simples.' },
+            { id: 'u11', name: 'Deep Learning', hours: 24, desc: 'Reconhecer a estrutura e o funcionamento básico de redes neurais e suas aplicações.' },
+            { id: 'u12', name: 'Ética, Segurança e Boas Práticas em IA', hours: 12, desc: 'Utilizar recursos de IA de forma ética, segura e responsável.' },
+            { id: 'u13', name: 'Projeto Integrador em IA Aplicada', hours: 32, desc: 'Desenvolver solução prática envolvendo instalação, configuração, uso ou personalização de recursos de IA.' }
+        ];
+
+        let draggedElement = null;
+        let targetElement = null;
+        let insertPosition = 'after';
+        let deletedBlocksHistory = []; 
+
+        function createBlockElement(id, name, hours, desc) {
+            const block = document.createElement('div');
+            block.className = 'lego-block';
+            block.draggable = true;
+            block.id = id;
+            block.dataset.hours = hours;
+            
+            block.innerHTML = `
+                <div class="block-info">
+                    <span class="block-title">${name}</span>
+                    <span class="block-hours">${hours}H</span>
+                </div>
+                <button class="info-btn" data-name="${name}" data-desc="${desc}">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            `;
+
+            block.addEventListener('dragstart', handleDragStart);
+            block.addEventListener('dragend', handleDragEnd);
+            block.addEventListener('dragover', handleBlockDragOver);
+            block.addEventListener('dragleave', handleBlockDragLeave);
+
+            const infoBtn = block.querySelector('.info-btn');
+            infoBtn.addEventListener('mouseenter', showTooltip);
+            infoBtn.addEventListener('mouseleave', hideTooltip);
+
+            return block;
+        }
+
+        const tooltip = document.getElementById('global-tooltip');
+        function showTooltip(e) {
+            const btn = e.currentTarget;
+            tooltip.innerHTML = `<strong>${btn.dataset.name}</strong><br><br>${btn.dataset.desc}`;
+            
+            const rect = btn.getBoundingClientRect();
+            let leftPos = rect.left - 290; 
+            
+            if (leftPos < 10) leftPos = rect.right + 10;
+            
+            tooltip.style.left = leftPos + 'px';
+            tooltip.style.top = (rect.top - 10) + 'px';
+            tooltip.classList.add('visible');
+        }
+        function hideTooltip() { tooltip.classList.remove('visible'); }
+
+        function initLibrary() {
+            const libraryZone = document.getElementById('library-zone');
+            initialUnits.forEach(unit => {
+                libraryZone.appendChild(createBlockElement(unit.id, unit.name, unit.hours, unit.desc));
+            });
+        }
+
+        function clearGlows() {
+            document.querySelectorAll('.glow-top, .glow-bottom').forEach(el => {
+                el.classList.remove('glow-top', 'glow-bottom');
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            hideTooltip();
+            
+            const dragIcon = this.cloneNode(true);
+            dragIcon.style.width = this.offsetWidth + 'px'; 
+            dragIcon.style.opacity = '0.6'; 
+            dragIcon.style.position = 'absolute';
+            dragIcon.style.top = '-9999px'; 
+            document.body.appendChild(dragIcon);
+            
+            e.dataTransfer.setDragImage(dragIcon, e.offsetX || 20, e.offsetY || 20);
+            
+            setTimeout(() => {
+                this.classList.add('dragging');
+                if(dragIcon.parentNode) dragIcon.parentNode.removeChild(dragIcon);
+            }, 10);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedElement = null;
+            targetElement = null;
+            clearGlows();
+            calculateTotalHours();
+        }
+
+        function handleBlockDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation(); 
+            
+            if (this === draggedElement) return;
+
+            clearGlows();
+            const rect = this.getBoundingClientRect();
+            const midY = rect.top + rect.height / 2;
+
+            targetElement = this;
+            if (e.clientY < midY) {
+                this.classList.add('glow-top');
+                insertPosition = 'before';
+            } else {
+                this.classList.add('glow-bottom');
+                insertPosition = 'after';
+            }
+        }
+
+        function handleBlockDragLeave(e) {
+            this.classList.remove('glow-top', 'glow-bottom');
+            targetElement = null;
+        }
+
+        const dropzones = document.querySelectorAll('.dropzone');
+        dropzones.forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault(); 
+                if(!targetElement) { 
+                    clearGlows();
+                    zone.classList.add('drag-over');
+                }
+            });
+
+            zone.addEventListener('dragleave', e => {
+                zone.classList.remove('drag-over');
+            });
+
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                clearGlows();
+                
+                if (draggedElement) {
+                    if (targetElement && targetElement.parentNode === zone) {
+                        if (insertPosition === 'before') {
+                            zone.insertBefore(draggedElement, targetElement);
+                        } else {
+                            zone.insertBefore(draggedElement, targetElement.nextSibling);
+                        }
+                    } else {
+                        zone.appendChild(draggedElement);
+                    }
+                }
+            });
+        });
+
+        const trashZone = document.getElementById('trash-zone');
+        trashZone.addEventListener('dragover', e => { e.preventDefault(); trashZone.classList.add('drag-over'); });
+        trashZone.addEventListener('dragleave', () => trashZone.classList.remove('drag-over'));
+        trashZone.addEventListener('drop', e => {
+            e.preventDefault();
+            trashZone.classList.remove('drag-over');
+            if (draggedElement) {
+                const infoBtn = draggedElement.querySelector('.info-btn');
+                deletedBlocksHistory.push({
+                    id: draggedElement.id,
+                    name: infoBtn.dataset.name,
+                    hours: draggedElement.dataset.hours,
+                    desc: infoBtn.dataset.desc
+                });
+                
+                document.getElementById('undo-btn').classList.remove('hidden');
+                draggedElement.remove(); 
+                calculateTotalHours();   
+            }
+        });
+
+        function undoDelete() {
+            if (deletedBlocksHistory.length > 0) {
+                const data = deletedBlocksHistory.pop();
+                const restoredBlock = createBlockElement(data.id, data.name, data.hours, data.desc);
+                document.getElementById('library-zone').appendChild(restoredBlock);
+                
+                if (deletedBlocksHistory.length === 0) {
+                    document.getElementById('undo-btn').classList.add('hidden');
+                }
+            }
+        }
+
+        function returnAllToLibrary() {
+            const curriculumZone = document.getElementById('curriculum-zone');
+            const libraryZone = document.getElementById('library-zone');
+            const blocks = curriculumZone.querySelectorAll('.lego-block');
+            
+            if (blocks.length === 0) return;
+
+            blocks.forEach(block => {
+                libraryZone.appendChild(block);
+            });
+            calculateTotalHours();
+        }
+
+        function clearGrid() {
+            const curriculumZone = document.getElementById('curriculum-zone');
+            const blocks = curriculumZone.querySelectorAll('.lego-block');
+            
+            if (blocks.length === 0) return;
+            
+            if (confirm("Tem certeza que deseja excluir todas as unidades da grade? Elas serão removidas permanentemente (mas podem ser desfeitas).")) {
+                blocks.forEach(block => {
+                    const infoBtn = block.querySelector('.info-btn');
+                    deletedBlocksHistory.push({
+                        id: block.id,
+                        name: infoBtn.dataset.name,
+                        hours: block.dataset.hours,
+                        desc: infoBtn.dataset.desc
+                    });
+                    block.remove();
+                });
+                document.getElementById('undo-btn').classList.remove('hidden');
+                calculateTotalHours();
+            }
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const blocks = document.getElementById('curriculum-zone').querySelectorAll('.lego-block');
+            if (blocks.length === 0) {
+                alert("A grade curricular está vazia. Adicione unidades antes de exportar.");
+                return;
+            }
+
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text("Relatório de Desenho Curricular - SENAI", 15, 20);
+            
+            doc.setFontSize(11);
+            let y = 35;
+
+            blocks.forEach((block, index) => {
+                const infoBtn = block.querySelector('.info-btn');
+                const name = infoBtn.dataset.name;
+                const hours = block.dataset.hours + "H";
+                const desc = infoBtn.dataset.desc;
+                
+                doc.setFont(undefined, 'bold');
+                doc.text(`${index + 1}. ${name} (${hours})`, 15, y);
+                y += 6;
+                
+                doc.setFont(undefined, 'normal');
+                const splitDesc = doc.splitTextToSize(`Descrição: ${desc}`, 180);
+                doc.text(splitDesc, 15, y);
+                
+                y += (splitDesc.length * 5) + 8; 
+                
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+            
+            const totalHours = document.getElementById('total-hours').innerText;
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Carga Horária Total do Curso: ${totalHours}`, 15, y + 10);
+            
+            doc.save("Desenho_Curricular_IA_SENAI.pdf");
+        }
+
+        function calculateTotalHours() {
+            const curriculumZone = document.getElementById('curriculum-zone');
+            const blocks = curriculumZone.querySelectorAll('.lego-block');
+            let total = 0;
+            blocks.forEach(block => total += parseInt(block.dataset.hours, 10));
+            document.getElementById('total-hours').innerText = total + 'H';
+        }
+
+        function createNewUnit() {
+            const name = prompt("Digite o nome da nova Unidade Curricular:");
+            if (!name) return;
+            const desc = prompt("Digite uma breve descrição para a unidade:") || "Descrição não informada.";
+            const hoursStr = prompt("Digite a carga horária (apenas números):");
+            const hours = parseInt(hoursStr, 10);
+            
+            if (isNaN(hours)) return alert("Carga horária inválida.");
+
+            const newId = 'unit_' + Date.now();
+            const newBlock = createBlockElement(newId, name.toUpperCase(), hours, desc);
+            document.getElementById('library-zone').appendChild(newBlock);
+        }
+
+        window.onload = initLibrary;
+    </script>
+</body>
+</html>
