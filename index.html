@@ -39,208 +39,115 @@
         /* TELA DE INTRODUÇÃO */
         #intro-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: var(--bg-color);
             background-image:
                 linear-gradient(var(--grid-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 40px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
         .intro-content {
             background: var(--panel-bg);
             border: 1px solid rgba(0, 229, 255, 0.2);
             border-radius: 12px;
-            padding: 4rem;
-            text-align: center;
+            padding: 4rem; text-align: center;
             backdrop-filter: blur(15px);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 229, 255, 0.1);
-            max-width: 700px;
-            border-top: 4px solid var(--accent-blue);
+            max-width: 700px; border-top: 4px solid var(--accent-blue);
         }
 
-        .intro-logo {
-            max-width: 220px;
-            margin-bottom: 2rem;
-        }
+        .intro-logo { max-width: 220px; margin-bottom: 2rem; }
 
         .intro-title {
-            font-family: var(--font-mono);
-            font-size: 3rem;
-            color: var(--accent-blue);
-            margin: 0 0 1rem 0;
-            text-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-            letter-spacing: -1px;
+            font-family: var(--font-mono); font-size: 3rem; color: var(--accent-blue);
+            margin: 0 0 1rem 0; text-shadow: 0 0 15px rgba(0, 229, 255, 0.3); letter-spacing: -1px;
         }
 
         .intro-text {
-            font-size: 1.2rem;
-            color: var(--text-main);
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
+            font-size: 1.2rem; color: var(--text-main); line-height: 1.6; margin-bottom: 2.5rem;
         }
 
-        .highlight-red {
-            color: var(--accent-red);
-            font-family: var(--font-mono);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .highlight-red { color: var(--accent-red); font-family: var(--font-mono); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
 
         .btn-start {
-            background: rgba(0, 229, 255, 0.1);
-            border: 2px solid var(--accent-blue);
-            color: var(--accent-blue);
-            font-family: var(--font-mono);
-            font-size: 1.2rem;
-            padding: 1rem 2.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: rgba(0, 229, 255, 0.1); border: 2px solid var(--accent-blue);
+            color: var(--accent-blue); font-family: var(--font-mono); font-size: 1.2rem;
+            padding: 1rem 2.5rem; border-radius: 4px; cursor: pointer; transition: all 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
         }
+        .btn-start:hover { background: var(--accent-blue); color: #000; box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); transform: translateY(-2px); }
 
-        .btn-start:hover {
-            background: var(--accent-blue);
-            color: #000;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
-            transform: translateY(-2px);
-        }
+        .hidden-screen { opacity: 0; visibility: hidden; pointer-events: none; }
 
-        .hidden-screen {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        /* CONTEÚDO PRINCIPAL (Inicialmente oculto para o flexbox não quebrar) */
+        /* CONTEÚDO PRINCIPAL */
         #main-app {
-            display: none; 
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-            opacity: 0;
-            transition: opacity 0.6s ease;
+            display: none; flex-direction: column; height: 100%; width: 100%;
+            opacity: 0; transition: opacity 0.6s ease;
         }
-
-        #main-app.visible {
-            opacity: 1;
-        }
+        #main-app.visible { opacity: 1; }
 
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid rgba(0, 229, 255, 0.2);
-            background: linear-gradient(180deg, rgba(0,66,130,0.15) 0%, rgba(11,14,20,1) 100%);
-            flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 2rem; border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+            background: linear-gradient(180deg, rgba(0,66,130,0.15) 0%, rgba(11,14,20,1) 100%); flex-shrink: 0;
         }
 
-        h1 {
-            font-family: var(--font-mono);
-            color: var(--accent-blue);
-            font-size: 1.5rem;
-            margin: 0;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
-        }
+        h1 { font-family: var(--font-mono); color: var(--accent-blue); font-size: 1.5rem; margin: 0; text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); }
 
         .cursor { animation: blink 1s step-start infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        .senai-logo-header {
-            height: 40px;
-            object-fit: contain;
-        }
+        .senai-logo-header { height: 40px; object-fit: contain; }
 
-        .workspace {
-            display: flex;
-            flex: 1;
-            padding: 2rem;
-            gap: 2rem;
-            overflow: hidden; 
-        }
+        .workspace { display: flex; flex: 1; padding: 2rem; gap: 2rem; overflow: hidden; }
 
         .panel {
-            background: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            box-sizing: border-box;
+            background: var(--panel-bg); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px; backdrop-filter: blur(10px); padding: 1.5rem;
+            display: flex; flex-direction: column; height: 100%; box-sizing: border-box;
         }
 
         .panel-title {
-            font-family: var(--font-mono);
-            color: white;
-            font-size: 1.1rem;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            border-bottom: 1px dashed rgba(0, 229, 255, 0.3);
-            padding-bottom: 0.5rem;
-            flex-shrink: 0;
+            font-family: var(--font-mono); color: white; font-size: 1.1rem;
+            margin-top: 0; margin-bottom: 1.5rem; border-bottom: 1px dashed rgba(0, 229, 255, 0.3);
+            padding-bottom: 0.5rem; flex-shrink: 0;
         }
 
+        /* Container do Header para botões alinhados */
         .panel-header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px dashed rgba(0, 229, 255, 0.3);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px dashed rgba(0, 229, 255, 0.3); margin-bottom: 1rem; padding-bottom: 0.5rem; flex-shrink: 0;
         }
+        .panel-header-actions .panel-title { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         
-        .panel-header-actions .panel-title {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
+        .action-buttons { display: flex; gap: 0.5rem; }
 
         .mini-btn {
+            background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue);
+            font-family: var(--font-mono); font-size: 0.75rem; padding: 0.4rem 0.8rem; border-radius: 4px;
+            cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+        }
+        .mini-btn:hover { background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 8px rgba(0, 229, 255, 0.2); }
+
+        .mini-btn.btn-danger { border-color: var(--accent-red); color: var(--accent-red); }
+        .mini-btn.btn-danger:hover { background: rgba(255, 42, 42, 0.1); box-shadow: 0 0 8px rgba(255, 42, 42, 0.2); }
+
+        /* Estilo do Ícone de Lixeira Limpo para a Biblioteca */
+        .icon-btn-danger {
             background: transparent;
-            border: 1px solid var(--accent-blue);
-            color: var(--accent-blue);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-        }
-
-        .mini-btn:hover {
-            background: rgba(0, 229, 255, 0.1);
-            box-shadow: 0 0 8px rgba(0, 229, 255, 0.2);
-        }
-
-        .mini-btn.btn-danger {
-            border-color: var(--accent-red);
+            border: none;
             color: var(--accent-red);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 0.5rem;
+            transition: transform 0.2s, text-shadow 0.2s;
         }
-
-        .mini-btn.btn-danger:hover {
-            background: rgba(255, 42, 42, 0.1);
-            box-shadow: 0 0 8px rgba(255, 42, 42, 0.2);
+        .icon-btn-danger:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
         }
 
         .library-panel { width: 340px; }
@@ -248,118 +155,55 @@
         .editor-panel { width: 300px; }
 
         .dropzone {
-            flex: 1;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: background 0.3s;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            overflow-y: auto; 
-            padding-bottom: 2rem;
+            flex: 1; padding: 0.5rem; border-radius: 4px; transition: background 0.3s;
+            display: flex; flex-direction: column; gap: 12px; overflow-y: auto; padding-bottom: 2rem;
         }
-
-        .dropzone.drag-over {
-            background: rgba(0, 229, 255, 0.05);
-            border: 1px dashed rgba(0, 229, 255, 0.3);
-        }
+        .dropzone.drag-over { background: rgba(0, 229, 255, 0.05); border: 1px dashed rgba(0, 229, 255, 0.3); }
 
         .trash-zone {
-            height: 150px;
-            border: 2px dashed var(--accent-red);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-red);
-            font-family: var(--font-mono);
-            opacity: 0.6;
-            transition: all 0.3s;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
+            height: 150px; border: 2px dashed var(--accent-red); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; color: var(--accent-red);
+            font-family: var(--font-mono); opacity: 0.6; transition: all 0.3s; margin-top: 1rem; margin-bottom: 0.5rem;
         }
-
-        .trash-zone.drag-over {
-            opacity: 1;
-            background: rgba(255, 42, 42, 0.1);
-            transform: scale(1.02);
-        }
+        .trash-zone.drag-over { opacity: 1; background: rgba(255, 42, 42, 0.1); transform: scale(1.02); }
 
         /* Lego Blocks */
         .lego-block {
-            background: rgba(0, 229, 255, 0.05);
-            border: 1px solid var(--accent-blue);
-            border-top: 4px solid var(--accent-blue);
-            border-radius: 4px 4px 8px 8px;
-            padding: 1rem;
-            cursor: grab;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
-            position: relative;
-            user-select: none;
-            background-color: var(--bg-color); 
+            background: rgba(0, 229, 255, 0.05); border: 1px solid var(--accent-blue);
+            border-top: 4px solid var(--accent-blue); border-radius: 4px 4px 8px 8px;
+            padding: 1rem; cursor: grab; display: flex; justify-content: space-between;
+            align-items: center; transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
+            position: relative; user-select: none; background-color: var(--bg-color); 
         }
-
         .lego-block::before {
-            content: '';
-            position: absolute;
-            top: -8px; left: 20px; right: 20px; height: 4px;
+            content: ''; position: absolute; top: -8px; left: 20px; right: 20px; height: 4px;
             background-image: radial-gradient(circle at 10px 2px, var(--accent-blue) 4px, transparent 4px);
             background-size: 30px 4px; background-repeat: repeat-x;
         }
-
         .lego-block:hover { box-shadow: 0 0 15px rgba(0, 229, 255, 0.15); }
+        .lego-block.dragging { opacity: 0.2; }
+        .lego-block.glow-bottom { box-shadow: 0 12px 20px -5px rgba(255, 255, 255, 0.8); border-bottom: 3px solid #FFF; }
+        .lego-block.glow-top { box-shadow: 0 -12px 20px -5px rgba(255, 255, 255, 0.8); border-top: 3px solid #FFF; }
 
-        .lego-block.dragging {
-            opacity: 0.2; 
-        }
-
-        .lego-block.glow-bottom {
-            box-shadow: 0 12px 20px -5px rgba(255, 255, 255, 0.8);
-            border-bottom: 3px solid #FFF;
-        }
-
-        .lego-block.glow-top {
-            box-shadow: 0 -12px 20px -5px rgba(255, 255, 255, 0.8);
-            border-top: 3px solid #FFF;
-        }
-
-        .block-info { display: flex; flex-direction: column; padding-right: 15px; pointer-events: none; }
-        
-        .block-title {
-            font-family: var(--font-mono); font-size: 0.90rem;
-            font-weight: bold; color: white; line-height: 1.3;
-        }
-
+        .block-info { display: flex; flex-direction: column; padding-right: 15px; pointer-events: none; flex-grow: 1; }
+        .block-title { font-family: var(--font-mono); font-size: 0.90rem; font-weight: bold; color: white; line-height: 1.3; }
         .block-hours { font-size: 0.8rem; color: var(--accent-blue); margin-top: 6px; font-family: var(--font-mono); }
 
-        .info-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            cursor: help; transition: color 0.3s; font-size: 1.2rem; padding: 5px;
+        .block-actions { display: flex; gap: 5px; }
+
+        .action-btn {
+            background: transparent; border: none; color: var(--text-muted); cursor: pointer;
+            transition: color 0.3s; font-size: 1.1rem; padding: 5px;
         }
-        .info-btn:hover { color: var(--accent-blue); }
+        .action-btn.info-btn:hover { color: var(--accent-blue); }
+        .action-btn.edit-btn:hover { color: #A855F7; }
 
         /* Tooltip Global */
         #global-tooltip {
-            position: fixed;
-            background-color: rgba(11, 14, 20, 0.95);
-            color: var(--text-main);
-            border: 1px solid var(--accent-blue);
-            border-radius: 6px;
-            padding: 12px;
-            width: 280px;
-            z-index: 9999;
-            font-family: var(--font-sans);
-            font-size: 0.85rem;
-            line-height: 1.5;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            pointer-events: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease;
-            backdrop-filter: blur(5px);
+            position: fixed; background-color: rgba(11, 14, 20, 0.95); color: var(--text-main);
+            border: 1px solid var(--accent-blue); border-radius: 6px; padding: 12px; width: 280px; z-index: 9999;
+            font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.5; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.2s ease; backdrop-filter: blur(5px);
         }
         #global-tooltip.visible { opacity: 1; visibility: visible; }
 
@@ -368,10 +212,13 @@
             background: transparent; border: 1px solid; padding: 1rem;
             font-family: var(--font-mono); border-radius: 4px; cursor: pointer;
             transition: all 0.3s; text-transform: uppercase; font-size: 0.9rem; width: 100%;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
+            display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px;
         }
-        .btn-add { border-color: var(--accent-blue); color: var(--accent-blue); margin-bottom: 10px; }
+        .btn-add { border-color: var(--accent-blue); color: var(--accent-blue); }
         .btn-add:hover { background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
+
+        .btn-import { border-color: #A855F7; color: #A855F7; } 
+        .btn-import:hover { background: rgba(168, 85, 247, 0.1); box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
 
         .btn-pdf { border-color: #E2E8F0; color: #E2E8F0; }
         .btn-pdf:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
@@ -379,24 +226,20 @@
         .btn-undo {
             background: transparent; border: none; color: var(--accent-blue);
             font-family: var(--font-mono); font-size: 0.85rem; cursor: pointer;
-            text-decoration: underline; width: 100%; text-align: center;
-            transition: color 0.3s; padding: 5px;
+            text-decoration: underline; width: 100%; text-align: center; transition: color 0.3s; padding: 5px;
         }
         .btn-undo:hover { color: #fff; }
         .hidden { display: none !important; }
 
         footer {
-            background: rgba(11, 14, 20, 0.95);
-            border-top: 1px solid rgba(0, 229, 255, 0.2);
-            padding: 1.2rem;
-            text-align: center; flex-shrink: 0;
+            background: rgba(11, 14, 20, 0.95); border-top: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 1.2rem; text-align: center; flex-shrink: 0;
         }
 
         .counter-container {
             font-family: var(--font-mono); font-size: 1.2rem; color: white;
             display: flex; align-items: center; justify-content: center; gap: 1rem;
         }
-
         .total-hours-display {
             color: var(--accent-blue); font-size: 2.2rem; font-weight: bold;
             text-shadow: 0 0 15px rgba(0, 229, 255, 0.4); background: rgba(0, 229, 255, 0.05);
@@ -411,12 +254,14 @@
 </head>
 <body>
 
+    <input type="file" id="import-file" accept=".json, .txt" style="display: none;">
+
     <div id="intro-screen">
         <div class="intro-content">
             <img src="logo.png" alt="Logo SENAI" class="intro-logo">
             <h1 class="intro-title">BEM-VINDO<span class="cursor">_</span></h1>
             <p class="intro-text">
-                <span class="highlight-red">portadores do futuro</span>:<br><br>
+                Aos <span class="highlight-red">portadores do futuro</span>:<br><br>
                 Nesta plataforma colaborativa, vamos trabalhar juntos, <br>
                 <span style="color: var(--accent-blue); font-weight: bold;">moldando o amanhã com IA</span>. <br><br>
                 Nossa missão é desenhar a grade curricular que impulsionará os próximos passos da instituição.
@@ -432,8 +277,14 @@
         </header>
 
         <main class="workspace">
+            
             <aside class="panel library-panel">
-                <h2 class="panel-title">BIBLIOTECA_DE_UNIDADES</h2>
+                <div class="panel-header-actions">
+                    <h2 class="panel-title">BIBLIOTECA_DE_UNIDADES</h2>
+                    <button class="icon-btn-danger" onclick="clearLibrary()" title="Limpar Biblioteca">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
                 <div class="dropzone" id="library-zone"></div>
             </aside>
 
@@ -453,6 +304,9 @@
                     <h2 class="panel-title">EDITOR_DE_GRADE</h2>
                     <button class="btn btn-add" onclick="createNewUnit()">
                         <i class="fas fa-plus"></i> Nova Unidade
+                    </button>
+                    <button class="btn btn-import" onclick="document.getElementById('import-file').click()">
+                        <i class="fas fa-file-import"></i> Importar Grade
                     </button>
                     <button class="btn btn-pdf" onclick="exportToPDF()">
                         <i class="fas fa-file-pdf"></i> Exportar PDF
@@ -486,19 +340,11 @@
         function startApp() {
             const intro = document.getElementById('intro-screen');
             const app = document.getElementById('main-app');
-            
-            // Inicia o fade out da intro
             intro.classList.add('hidden-screen');
-            
-            // Após a transição do fade out (600ms), esconde o elemento e mostra a aplicação
             setTimeout(() => {
                 intro.style.display = 'none';
                 app.style.display = 'flex';
-                
-                // Pequeno delay para o navegador renderizar antes de aplicar a opacidade
-                setTimeout(() => {
-                    app.classList.add('visible');
-                }, 50);
+                setTimeout(() => { app.classList.add('visible'); }, 50);
             }, 600);
         }
 
@@ -536,9 +382,14 @@
                     <span class="block-title">${name}</span>
                     <span class="block-hours">${hours}H</span>
                 </div>
-                <button class="info-btn" data-name="${name}" data-desc="${desc}">
-                    <i class="fas fa-info-circle"></i>
-                </button>
+                <div class="block-actions">
+                    <button class="action-btn edit-btn" title="Editar Unidade" onclick="editUnit('${id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn info-btn" data-name="${name}" data-desc="${desc}">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
             `;
 
             block.addEventListener('dragstart', handleDragStart);
@@ -557,12 +408,9 @@
         function showTooltip(e) {
             const btn = e.currentTarget;
             tooltip.innerHTML = `<strong>${btn.dataset.name}</strong><br><br>${btn.dataset.desc}`;
-            
             const rect = btn.getBoundingClientRect();
             let leftPos = rect.left - 290; 
-            
             if (leftPos < 10) leftPos = rect.right + 10;
-            
             tooltip.style.left = leftPos + 'px';
             tooltip.style.top = (rect.top - 10) + 'px';
             tooltip.classList.add('visible');
@@ -577,24 +425,19 @@
         }
 
         function clearGlows() {
-            document.querySelectorAll('.glow-top, .glow-bottom').forEach(el => {
-                el.classList.remove('glow-top', 'glow-bottom');
-            });
+            document.querySelectorAll('.glow-top, .glow-bottom').forEach(el => { el.classList.remove('glow-top', 'glow-bottom'); });
         }
 
         function handleDragStart(e) {
             draggedElement = this;
             hideTooltip();
-            
             const dragIcon = this.cloneNode(true);
             dragIcon.style.width = this.offsetWidth + 'px'; 
             dragIcon.style.opacity = '0.6'; 
             dragIcon.style.position = 'absolute';
             dragIcon.style.top = '-9999px'; 
             document.body.appendChild(dragIcon);
-            
             e.dataTransfer.setDragImage(dragIcon, e.offsetX || 20, e.offsetY || 20);
-            
             setTimeout(() => {
                 this.classList.add('dragging');
                 if(dragIcon.parentNode) dragIcon.parentNode.removeChild(dragIcon);
@@ -610,23 +453,14 @@
         }
 
         function handleBlockDragOver(e) {
-            e.preventDefault();
-            e.stopPropagation(); 
-            
+            e.preventDefault(); e.stopPropagation(); 
             if (this === draggedElement) return;
-
             clearGlows();
             const rect = this.getBoundingClientRect();
             const midY = rect.top + rect.height / 2;
-
             targetElement = this;
-            if (e.clientY < midY) {
-                this.classList.add('glow-top');
-                insertPosition = 'before';
-            } else {
-                this.classList.add('glow-bottom');
-                insertPosition = 'after';
-            }
+            if (e.clientY < midY) { this.classList.add('glow-top'); insertPosition = 'before'; } 
+            else { this.classList.add('glow-bottom'); insertPosition = 'after'; }
         }
 
         function handleBlockDragLeave(e) {
@@ -638,31 +472,16 @@
         dropzones.forEach(zone => {
             zone.addEventListener('dragover', e => {
                 e.preventDefault(); 
-                if(!targetElement) { 
-                    clearGlows();
-                    zone.classList.add('drag-over');
-                }
+                if(!targetElement) { clearGlows(); zone.classList.add('drag-over'); }
             });
-
-            zone.addEventListener('dragleave', e => {
-                zone.classList.remove('drag-over');
-            });
-
+            zone.addEventListener('dragleave', e => { zone.classList.remove('drag-over'); });
             zone.addEventListener('drop', e => {
-                e.preventDefault();
-                zone.classList.remove('drag-over');
-                clearGlows();
-                
+                e.preventDefault(); zone.classList.remove('drag-over'); clearGlows();
                 if (draggedElement) {
                     if (targetElement && targetElement.parentNode === zone) {
-                        if (insertPosition === 'before') {
-                            zone.insertBefore(draggedElement, targetElement);
-                        } else {
-                            zone.insertBefore(draggedElement, targetElement.nextSibling);
-                        }
-                    } else {
-                        zone.appendChild(draggedElement);
-                    }
+                        if (insertPosition === 'before') { zone.insertBefore(draggedElement, targetElement); } 
+                        else { zone.insertBefore(draggedElement, targetElement.nextSibling); }
+                    } else { zone.appendChild(draggedElement); }
                 }
             });
         });
@@ -671,20 +490,15 @@
         trashZone.addEventListener('dragover', e => { e.preventDefault(); trashZone.classList.add('drag-over'); });
         trashZone.addEventListener('dragleave', () => trashZone.classList.remove('drag-over'));
         trashZone.addEventListener('drop', e => {
-            e.preventDefault();
-            trashZone.classList.remove('drag-over');
+            e.preventDefault(); trashZone.classList.remove('drag-over');
             if (draggedElement) {
                 const infoBtn = draggedElement.querySelector('.info-btn');
                 deletedBlocksHistory.push({
-                    id: draggedElement.id,
-                    name: infoBtn.dataset.name,
-                    hours: draggedElement.dataset.hours,
-                    desc: infoBtn.dataset.desc
+                    id: draggedElement.id, name: infoBtn.dataset.name,
+                    hours: draggedElement.dataset.hours, desc: infoBtn.dataset.desc
                 });
-                
                 document.getElementById('undo-btn').classList.remove('hidden');
-                draggedElement.remove(); 
-                calculateTotalHours();   
+                draggedElement.remove(); calculateTotalHours();   
             }
         });
 
@@ -693,40 +507,48 @@
                 const data = deletedBlocksHistory.pop();
                 const restoredBlock = createBlockElement(data.id, data.name, data.hours, data.desc);
                 document.getElementById('library-zone').appendChild(restoredBlock);
-                
-                if (deletedBlocksHistory.length === 0) {
-                    document.getElementById('undo-btn').classList.add('hidden');
-                }
+                if (deletedBlocksHistory.length === 0) { document.getElementById('undo-btn').classList.add('hidden'); }
             }
         }
 
+        // --- EXCLUSÃO DA BIBLIOTECA (Apenas ícone limpo) ---
+        function clearLibrary() {
+            const libraryZone = document.getElementById('library-zone');
+            const blocks = libraryZone.querySelectorAll('.lego-block');
+            if (blocks.length === 0) return;
+            if (confirm("Tem certeza que deseja limpar toda a BIBLIOTECA? As unidades serão removidas (mas podem ser desfeitas).")) {
+                blocks.forEach(block => {
+                    const infoBtn = block.querySelector('.info-btn');
+                    deletedBlocksHistory.push({
+                        id: block.id, name: infoBtn.dataset.name,
+                        hours: block.dataset.hours, desc: infoBtn.dataset.desc
+                    });
+                    block.remove();
+                });
+                document.getElementById('undo-btn').classList.remove('hidden');
+            }
+        }
+
+        // --- RESTAURADOS: Botões da Grade Curricular ---
         function returnAllToLibrary() {
             const curriculumZone = document.getElementById('curriculum-zone');
             const libraryZone = document.getElementById('library-zone');
             const blocks = curriculumZone.querySelectorAll('.lego-block');
-            
             if (blocks.length === 0) return;
-
-            blocks.forEach(block => {
-                libraryZone.appendChild(block);
-            });
+            blocks.forEach(block => { libraryZone.appendChild(block); });
             calculateTotalHours();
         }
 
         function clearGrid() {
             const curriculumZone = document.getElementById('curriculum-zone');
             const blocks = curriculumZone.querySelectorAll('.lego-block');
-            
             if (blocks.length === 0) return;
-            
-            if (confirm("Tem certeza que deseja excluir todas as unidades da grade? Elas serão removidas permanentemente (mas podem ser desfeitas).")) {
+            if (confirm("Tem certeza que deseja excluir todas as unidades da GRADE? Elas serão removidas (mas podem ser desfeitas).")) {
                 blocks.forEach(block => {
                     const infoBtn = block.querySelector('.info-btn');
                     deletedBlocksHistory.push({
-                        id: block.id,
-                        name: infoBtn.dataset.name,
-                        hours: block.dataset.hours,
-                        desc: infoBtn.dataset.desc
+                        id: block.id, name: infoBtn.dataset.name,
+                        hours: block.dataset.hours, desc: infoBtn.dataset.desc
                     });
                     block.remove();
                 });
@@ -735,6 +557,47 @@
             }
         }
 
+        // --- SISTEMA DE IMPORTAÇÃO ---
+        document.getElementById('import-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    
+                    if (Array.isArray(importedData)) {
+                        const curriculumZone = document.getElementById('curriculum-zone');
+                        
+                        importedData.forEach(unit => {
+                            if(unit.name && unit.hours) {
+                                const newId = 'unit_import_' + Date.now() + Math.random().toString(36).substr(2, 5);
+                                const newBlock = createBlockElement(
+                                    newId, 
+                                    unit.name.toUpperCase(), 
+                                    parseInt(unit.hours), 
+                                    unit.desc || "Descrição não informada."
+                                );
+                                curriculumZone.appendChild(newBlock);
+                            }
+                        });
+                        
+                        calculateTotalHours();
+                        alert('Grade importada com sucesso para o desenho curricular!');
+                    } else {
+                        alert('Formato de arquivo inválido. O arquivo precisa conter uma lista (array) de unidades em formato JSON.');
+                    }
+                } catch (error) {
+                    alert('Erro ao ler o arquivo. Certifique-se de que é um formato JSON válido. Erro: ' + error.message);
+                }
+            };
+            
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        // --- SISTEMA DE EXPORTAÇÃO ---
         function exportToPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -745,43 +608,29 @@
                 return;
             }
 
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');
+            doc.setFontSize(16); doc.setFont(undefined, 'bold');
             doc.text("Relatório de Desenho Curricular - SENAI", 15, 20);
-            
-            doc.setFontSize(11);
-            let y = 35;
+            doc.setFontSize(11); let y = 35;
 
             blocks.forEach((block, index) => {
                 const infoBtn = block.querySelector('.info-btn');
-                const name = infoBtn.dataset.name;
-                const hours = block.dataset.hours + "H";
+                const name = infoBtn.dataset.name; const hours = block.dataset.hours + "H";
                 const desc = infoBtn.dataset.desc;
                 
-                doc.setFont(undefined, 'bold');
-                doc.text(`${index + 1}. ${name} (${hours})`, 15, y);
-                y += 6;
+                doc.setFont(undefined, 'bold'); doc.text(`${index + 1}. ${name} (${hours})`, 15, y); y += 6;
+                doc.setFont(undefined, 'normal'); const splitDesc = doc.splitTextToSize(`Descrição: ${desc}`, 180);
+                doc.text(splitDesc, 15, y); y += (splitDesc.length * 5) + 8; 
                 
-                doc.setFont(undefined, 'normal');
-                const splitDesc = doc.splitTextToSize(`Descrição: ${desc}`, 180);
-                doc.text(splitDesc, 15, y);
-                
-                y += (splitDesc.length * 5) + 8; 
-                
-                if (y > 270) {
-                    doc.addPage();
-                    y = 20;
-                }
+                if (y > 270) { doc.addPage(); y = 20; }
             });
             
             const totalHours = document.getElementById('total-hours').innerText;
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
+            doc.setFontSize(14); doc.setFont(undefined, 'bold');
             doc.text(`Carga Horária Total do Curso: ${totalHours}`, 15, y + 10);
-            
             doc.save("Desenho_Curricular_IA_SENAI.pdf");
         }
 
+        // --- SISTEMA DE CRIAÇÃO E EDIÇÃO ---
         function calculateTotalHours() {
             const curriculumZone = document.getElementById('curriculum-zone');
             const blocks = curriculumZone.querySelectorAll('.lego-block');
@@ -796,12 +645,45 @@
             const desc = prompt("Digite uma breve descrição para a unidade:") || "Descrição não informada.";
             const hoursStr = prompt("Digite a carga horária (apenas números):");
             const hours = parseInt(hoursStr, 10);
-            
             if (isNaN(hours)) return alert("Carga horária inválida.");
 
             const newId = 'unit_' + Date.now();
             const newBlock = createBlockElement(newId, name.toUpperCase(), hours, desc);
             document.getElementById('library-zone').appendChild(newBlock);
+        }
+
+        function editUnit(blockId) {
+            const block = document.getElementById(blockId);
+            if (!block) return;
+
+            const infoBtn = block.querySelector('.info-btn');
+            const currentName = infoBtn.dataset.name;
+            const currentDesc = infoBtn.dataset.desc;
+            const currentHours = block.dataset.hours;
+
+            const newName = prompt("Editar Nome da Unidade:", currentName);
+            if (newName === null) return; 
+
+            const newDesc = prompt("Editar Descrição da Unidade:", currentDesc);
+            if (newDesc === null) return;
+
+            const newHoursStr = prompt("Editar Carga Horária (apenas números):", currentHours);
+            if (newHoursStr === null) return;
+            const newHours = parseInt(newHoursStr, 10);
+            
+            if (isNaN(newHours)) {
+                alert("Carga horária inválida. Alteração cancelada.");
+                return;
+            }
+
+            block.querySelector('.block-title').innerText = newName.toUpperCase();
+            block.querySelector('.block-hours').innerText = newHours + 'H';
+            block.dataset.hours = newHours;
+            
+            infoBtn.dataset.name = newName.toUpperCase();
+            infoBtn.dataset.desc = newDesc;
+
+            calculateTotalHours();
         }
 
         window.onload = initLibrary;
